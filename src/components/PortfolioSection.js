@@ -1,10 +1,11 @@
-// components/PortfolioSection.js
 import React from 'react';
 
 function PortfolioSection() {
   return (
     <section className="py-16">
-      <h1>PortfolioSection Works!</h1>
+      <div>
+        <p className="text-lg">Currently in Development</p>
+      </div>
     </section>
   );
 }
