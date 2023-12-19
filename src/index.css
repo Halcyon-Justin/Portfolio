@@ -11,3 +11,16 @@
       opacity: 0;
     }
   }
+
+  .console-history {
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: transparent transparent; /* For Firefox */
+  }
+  
+  .console-history::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+  }
+  
+  .console-history::-webkit-scrollbar-thumb {
+    background-color: transparent; /* Color of the thumb */
+  }
