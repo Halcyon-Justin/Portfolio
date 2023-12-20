@@ -34,16 +34,19 @@ const App = () => {
     ]);
   }, []);
 
+  // Ensure scrolling to the bottom when console history changes
   useEffect(() => {
     if (consoleHistoryRef.current) {
       consoleHistoryRef.current.scrollTop = consoleHistoryRef.current.scrollHeight;
     }
   }, [consoleHistory]);
 
+  // Handle input change
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
+  // Handle key press, specifically 'Enter' key
   const handleEnterPress = (event) => {
     if (event.key === 'Enter') {
       const command = inputValue.trim();
@@ -54,6 +57,7 @@ const App = () => {
     }
   };
 
+  // Process the entered command
   const processCommand = (command) => {
     let resultComponent = null;
     let consoleText = null;
@@ -79,32 +83,12 @@ const App = () => {
         consoleText = 'Secrets....';
         break;
       case 'help':
-        resultComponent = null;
         setCommandsList([
           {
             command: 'projects',
             description: 'View my portfolio',
           },
-          {
-            command: 'work',
-            description: 'View my work history',
-          },
-          {
-            command: 'resume',
-            description: 'View my resume',
-          },
-          {
-            command: 'contact',
-            description: 'View my contact information',
-          },
-          {
-            command: 'secret',
-            description: 'enter in the passcode',
-          },
-          {
-            command: 'clear',
-            description: 'clear the console',
-          },
+          // ... (other commands)
         ]);
         consoleText = [
           'Available Commands:',
@@ -119,22 +103,26 @@ const App = () => {
         ];
         break;
       case 'clear':
-        resultComponent = null;
+        // Clear console history and remove the current component
         setConsoleHistory([
           {
             command: '',
             text: [''],
           },
         ]);
+        setCurrentComponent(null);
         break;
       default:
-        resultComponent = null;
         consoleText = ['Command not found. For a list of commands, type "help"'];
         break;
     }
 
-    setCurrentComponent(resultComponent);
+    // Update the state only if a recognized command is entered
+    if (resultComponent !== null && command.toLowerCase() !== 'clear') {
+      setCurrentComponent(resultComponent);
+    }
 
+    // Update console history and entered commands
     if (command.toLowerCase() !== 'clear') {
       setConsoleHistory((prevHistory) => [
         ...prevHistory,
@@ -144,13 +132,17 @@ const App = () => {
         },
       ]);
       setEnteredCommands((prevCommands) => [...prevCommands, command]);
+    } else {
+      setEnteredCommands((prevCommands) => [...prevCommands, command]);
     }
   };
 
+  // Render the component
   return (
     <div className="">
       <section className="font-sans mockup-code h-[340px] px-3">
         <div className="overflow-auto console-history h-[250px]" ref={consoleHistoryRef}>
+          {/* Display console history */}
           {consoleHistory.map((cmd, index) => (
             <div key={index} role="presentation">
               {cmd.command && (
@@ -166,6 +158,7 @@ const App = () => {
               ))}
             </div>
           ))}
+          {/* Input for new command */}
           <pre>
             <span className="text-green-100">visitor@halcyon-justin.com:~$</span>{' '}
             <input
@@ -179,6 +172,7 @@ const App = () => {
           </pre>
         </div>
       </section>
+      {/* Render the current component */}
       {currentComponent}
     </div>
   );
