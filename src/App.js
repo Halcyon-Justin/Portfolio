@@ -5,38 +5,60 @@ import ResumeSection from './components/ResumeSection';
 import WorkHistorySection from './components/WorkHistorySection';
 
 const App = () => {
+  // State declarations
   const [inputValue, setInputValue] = useState('');
   const [currentComponent, setCurrentComponent] = useState(null);
   const [enteredCommands, setEnteredCommands] = useState([]);
   const [commandsList, setCommandsList] = useState([]);
   const [consoleHistory, setConsoleHistory] = useState([]);
+
+  // Refs for DOM elements
   const consoleHistoryRef = useRef(null);
   const userInputRef = useRef(null);
 
   useEffect(() => {
     userInputRef.current.focus();
 
-    // Update the console history with the welcome messages on mount
-    setConsoleHistory([
-      {
-        command: '',
-        text: [
-          '██╗  ██╗ █████╗ ██╗      ██████╗██╗   ██╗ ██████╗ ███╗   ██╗',
-          '██║  ██║██╔══██╗██║     ██╔════╝╚██╗ ██╔╝██╔═══██╗████╗  ██║',
-          '███████║███████║██║     ██║      ╚████╔╝ ██║   ██║██╔██╗ ██║',
-          '██╔══██║██╔══██║██║     ██║       ╚██╔╝  ██║   ██║██║╚██╗██║',
-          '██║  ██║██║  ██║███████╗╚██████╗   ██║   ╚██████╔╝██║ ╚████║',
-          '╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝',
-          'Welcome to my interactive Web Portfolio.',
-          'For a list of available commands, type "help"'
-        ],
-      },
-    ]);
+    // Handle resize and initial welcome message
+    const handleResize = () => {
+      const welcomeMessage = window.innerWidth < 600
+        ? 'Welcome to my mobile-friendly Web Portfolio.'
+        : 'Welcome to my interactive Web Portfolio.';
+
+      // Update the console history with the welcome messages on mount
+      setConsoleHistory([
+        {
+          command: '',
+          text: [
+            '██╗  ██╗ █████╗ ██╗      ██████╗██╗   ██╗ ██████╗ ███╗   ██╗',
+            '██║  ██║██╔══██╗██║     ██╔════╝╚██╗ ██╔╝██╔═══██╗████╗  ██║',
+            '███████║███████║██║     ██║      ╚████╔╝ ██║   ██║██╔██╗ ██║',
+            '██╔══██║██╔══██║██║     ██║       ╚██╔╝  ██║   ██║██║╚██╗██║',
+            '██║  ██║██║  ██║███████╗╚██████╗   ██║   ╚██████╔╝██║ ╚████║',
+            '╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═══╝',
+            welcomeMessage,
+            'For a list of available commands, type "help"'
+          ],
+        },
+      ]);
+    };
+
+    // Attach event listener for resize
+    window.addEventListener('resize', handleResize);
+
+    // Initial call to set the console history on component mount
+    handleResize();
+
+    // Cleanup: remove event listener when component is unmounted
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   // Ensure scrolling to the bottom when console history changes
   useEffect(() => {
     if (consoleHistoryRef.current) {
+      // Use optional chaining to handle null or undefined
       consoleHistoryRef.current.scrollTop = consoleHistoryRef.current.scrollHeight;
     }
   }, [consoleHistory]);
@@ -117,7 +139,7 @@ const App = () => {
         break;
     }
 
-    // Update the state only if a recognized command is entered
+     // Update the state only if a recognized command is entered
     if (resultComponent !== null && command.toLowerCase() !== 'clear') {
       setCurrentComponent(resultComponent);
     }
@@ -141,12 +163,13 @@ const App = () => {
   return (
     <div className="">
       <section className="font-sans mockup-code h-[340px] px-3">
-        <div className="overflow-auto console-history h-[250px]" ref={consoleHistoryRef}>
+        <div className="overflow-auto console-history h-[250px] text-primary" ref={consoleHistoryRef}>
           {/* Display console history */}
           {consoleHistory.map((cmd, index) => (
             <div key={index} role="presentation">
               {cmd.command && (
-                <pre className="text-green-100">
+                // Use template literals for better readability
+                <pre className="text-accent">
                   <span className="">visitor@halcyon-justin.com:~$</span>{' '}
                   <code>{cmd.command}</code>
                 </pre>
@@ -160,7 +183,7 @@ const App = () => {
           ))}
           {/* Input for new command */}
           <pre>
-            <span className="text-green-100">visitor@halcyon-justin.com:~$</span>{' '}
+            <span className="text-accent">visitor@halcyon-justin.com:~$</span>{' '}
             <input
               type="text"
               ref={userInputRef}
