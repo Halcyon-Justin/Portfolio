@@ -9,7 +9,6 @@ const App = () => {
   const [inputValue, setInputValue] = useState('');
   const [currentComponent, setCurrentComponent] = useState(null);
   const [enteredCommands, setEnteredCommands] = useState([]);
-  const [commandsList, setCommandsList] = useState([]);
   const [consoleHistory, setConsoleHistory] = useState([]);
 
   // Refs for DOM elements
@@ -87,7 +86,7 @@ const App = () => {
     switch (command.toLowerCase()) {
       case 'projects':
         resultComponent = <PortfolioComponent />;
-        consoleText = 'Viewing portfolio...';
+        consoleText = 'Viewing projects...';
         break;
       case 'work':
         resultComponent = <WorkHistorySection />;
@@ -105,18 +104,11 @@ const App = () => {
         consoleText = 'Secrets....';
         break;
       case 'help':
-        setCommandsList([
-          {
-            command: 'projects',
-            description: 'View my portfolio',
-          },
-          // ... (other commands)
-        ]);
         consoleText = [
           'Available Commands:',
           'Command     | Description',
           '-----------------------------------',
-          'projects    | View my portfolio',
+          'projects    | View my projects',
           'work        | View my work history',
           'resume      | View my resume',
           'contact     | View my contact information',
